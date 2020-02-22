@@ -3,13 +3,3 @@
 @import '~bootstrap/scss/bootstrap';
 @import '~overlayscrollbars/css/OverlayScrollbars.min.css';
 @import '~admin-lte/dist/css/adminlte.min.css';
-
-
-.router-link-exact-active.router-link-active{
-    background-color: #28a745 !important;
-    color: #fff !important;
-}
-
-.router-link-exact-active.router-link-active:hover{
-    background-color: #28a745 !important;
-}

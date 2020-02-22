@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use App\User;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -10,8 +11,16 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except('login');
+    }
     
     public function login(Request $request){
+        $this->validate($request,[
+            'username' => 'required',
+            'password' => ['required', 'string', 'min:4'],
+        ]);
 
         $http = new Client;
         try {
@@ -71,11 +80,10 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        // auth()->user()->tokens->each(function ($token, $key) {
-        //     $token->delete();
-        // });
-
-        return response()->json('Logged out successfully', 200);
+        Auth::guard('api')->user()->tokens->each(function ($token, $key) {
+            $token->delete();
+        });
+        return response()->json(['message' =>'Logged out successfully'], 200);        
     }
 
 }

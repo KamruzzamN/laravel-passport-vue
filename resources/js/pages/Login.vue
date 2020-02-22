@@ -12,16 +12,16 @@
                     <form @submit.prevent="login">
                         
                         <div class="input-group mb-3">
-                            <input id="email" type="email" class="form-control" name="email" v-model="form.username" :class="{ 'is-invalid': form.errors.has('username') }" required autocomplete="email" autofocus>
+                            <input id="email" type="email" class="form-control" name="email" v-model="form.username" :class="{ 'is-invalid': form.errors.has('username') }" autocomplete="email" autofocus>
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fa fa-envelope"></span>
                                 </div>
                             </div>
-                            <has-error :form="form" field="email"></has-error>
+                            <has-error :form="form" field="username"></has-error>
                         </div>
                         <div class="input-group mb-3">
-                            <input id="password" type="password" class="form-control" name="password" v-model="form.password" :class="{ 'is-invalid': form.errors.has('password') }" required autocomplete="current-password">
+                            <input id="password" type="password" class="form-control" name="password" v-model="form.password" :class="{ 'is-invalid': form.errors.has('password') }" autocomplete="current-password">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fa fa-lock"></span>
@@ -51,12 +51,14 @@
                     <p class="mb-1">
                         <a href="">I forgot my password</a>
                     </p>
+                    <!-- <p class="mb-1" v-if="retrieveToken">
+                        {{retrieveToken}}
+                    </p> -->
                 </div>
                 <!-- /.login-card-body -->
             </div>
         </div>
         <!-- /.login-box -->
-        <link rel="stylesheet" href="">
         
     </div>
 </template>
@@ -68,7 +70,6 @@
                 form: new Form({
                     username: null,
                     password: null,
-                    remember: null,
                 }),
                 isLoading: false,
                 isLogin: true,
@@ -78,22 +79,38 @@
             
         },
         computed:{
+            retrieveToken(){
+                return this.$store.getters.retrieveToken;
+            }
         },
         methods:{
             login(){
                 this.isLoading = true;
                 this.isLogin = false;
-                // this.$store.dispatch('retrieveToken',{
-                //     username: this.form.email,
-                //     password: this.form.password
-                // });
 
-                // this.form.post('/api/login').then((response) =>{
-                //     console.log(response);
-                // }).catch((error) =>{
-                //     this.isLoading = false;
-                //     this.isLogin = true;
-                // })
+                this.$store.dispatch('retrieveToken',{
+                    username: this.form.username,
+                    password: this.form.password,
+                }).then((response) =>{
+                    this.$router.push({name:'home'});
+                    this.isLoading = false;
+                }).catch((error) =>{
+                    console.log(error);
+                    this.isLoading = false;
+                });
+                
+
+                // new Promise((result, rej) => {
+                //     this.form.post('/api/login').then((response) =>{
+                //         this.$store.commit('access_token', response.data.access_token);
+                //         console.log(this.$store.state.access_token);
+                //         this.isLoading = false;
+                //     }).catch((error) =>{
+                //         this.isLoading = false;
+                //         this.isLogin = true;
+                //         console.log(error)
+                //     })
+                // });
             }
         }
         

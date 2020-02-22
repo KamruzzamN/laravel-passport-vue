@@ -21,12 +21,15 @@
                             <router-link class="nav-link" :to="{name:'home'}">Home</router-link>
                         </li>
 
-                        <li class="nav-item">
+                        <li class="nav-item" v-if="!loggedIn">
                             <router-link class="nav-link" :to="{name:'login'}">Login</router-link>
                         </li>
 
-                        <li class="nav-item">
+                        <li class="nav-item" v-if="!loggedIn">
                             <router-link class="nav-link" :to="{name: 'register'}">Register</router-link>
+                        </li>
+                        <li class="nav-item" v-if="loggedIn">
+                            <router-link class="nav-link" :to="{name: 'logout'}">Logout</router-link>
                         </li>
                     </ul>
                 </div>
@@ -37,6 +40,11 @@
 
 <script>
     export default {
+        computed:{
+            loggedIn(){
+                return this.$store.getters.loggedIn
+            }
+        }
         
     }
 </script>
