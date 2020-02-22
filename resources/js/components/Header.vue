@@ -17,8 +17,12 @@
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
 
-                        <li class="nav-item">
+                        <li class="nav-item" v-if="loggedIn">
                             <router-link class="nav-link" :to="{name:'home'}">Home</router-link>
+                        </li>
+
+                        <li class="nav-item" v-if="loggedIn">
+                            <router-link class="nav-link" :to="{name:'users'}">Users</router-link>
                         </li>
 
                         <li class="nav-item" v-if="!loggedIn">

@@ -1,4 +1,5 @@
 import Home from './pages/Index';
+import Users from './pages/Users';
 import Login from './pages/Login';
 import Logout from './pages/Logout';
 import Register from './pages/Register';
@@ -8,6 +9,15 @@ const routes = [
         path: '/',
         name: 'home',
         component: Home,
+        meta:{
+            requiresAuth: true
+        }
+    },
+
+    {
+        path: '/users',
+        name: 'users',
+        component: Users,
         meta:{
             requiresAuth: true
         }

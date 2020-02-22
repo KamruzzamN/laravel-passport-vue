@@ -17,7 +17,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::get('/users', function(){
-    return response()->json(App\User::all(),200);
+    return response()->json(['users' => App\User::all()],200);
 });
 
 Route::post('/login', 'AuthController@login');

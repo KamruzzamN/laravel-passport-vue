@@ -1,6 +1,7 @@
 export default {
 	state: {
 		token: localStorage.getItem('access_token') || null,
+		users: [],
 	},
 
 	getters: {
@@ -12,6 +13,9 @@ export default {
 		},
 		destroyToken(state){
 			return state.token = null
+		},
+		users(state){
+			return state.users
 		}
 	},
 
@@ -47,6 +51,14 @@ export default {
 					})
 				});
 			}
+		},
+
+		loadUsers(contex){
+			axios.get('/api/users').then((response) =>{
+				contex.commit('users', response.data.users)
+			}).catch((error) => {
+				console.log(error)
+			})
 		}
 	},
 
@@ -56,6 +68,9 @@ export default {
 		},
 		destroyToken(state, data){
 			return state.token = null
+		},
+		users(state, data){
+			return state.users = data
 		}
 	},
 }
