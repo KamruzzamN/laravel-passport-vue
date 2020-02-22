@@ -62739,8 +62739,16 @@ router.beforeEach(function (to, from, next) {
     } else {
       next();
     }
-  } else {
-    next();
+  } else if (to.matched.some(function (record) {
+    return record.meta.requiresGuest;
+  })) {
+    if (store.getters.loggedIn) {
+      next({
+        name: 'home'
+      });
+    } else {
+      next();
+    }
   }
 }); //app layouts
 
@@ -63406,7 +63414,10 @@ var routes = [{
 }, {
   path: '/logout',
   name: 'logout',
-  component: _pages_Logout__WEBPACK_IMPORTED_MODULE_3__["default"]
+  component: _pages_Logout__WEBPACK_IMPORTED_MODULE_3__["default"],
+  meta: {
+    requiresAuth: true
+  }
 }, {
   path: '/register',
   name: 'register',

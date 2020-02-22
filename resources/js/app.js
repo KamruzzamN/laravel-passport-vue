@@ -37,8 +37,15 @@ router.beforeEach((to, from, next) => {
             next()
         }
     }
-    else{
-        next()
+    else if (to.matched.some(record => record.meta.requiresGuest)) {
+        if (store.getters.loggedIn) {
+            next({
+                name: 'home'
+            })
+        }
+        else {
+            next()
+        }
     }
 })
 
