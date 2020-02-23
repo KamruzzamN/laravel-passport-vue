@@ -1919,11 +1919,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1931,46 +1926,57 @@ __webpack_require__.r(__webpack_exports__);
         username: null,
         password: null
       }),
-      isLoading: false,
-      isLogin: true
+      isLoading: false
     };
   },
   mounted: function mounted() {},
-  computed: {
-    retrieveToken: function retrieveToken() {
-      return this.$store.getters.retrieveToken;
-    }
-  },
+  computed: {},
   methods: {
     login: function login() {
       var _this = this;
 
-      this.isLoading = true;
-      this.isLogin = false;
-      this.$store.dispatch('retrieveToken', {
-        username: this.form.username,
-        password: this.form.password
-      }).then(function (response) {
-        _this.$router.push({
-          name: 'home'
-        });
-
-        _this.isLoading = false;
-      })["catch"](function (error) {
-        console.log(error);
-        _this.isLoading = false;
-      }); // new Promise((result, rej) => {
-      //     this.form.post('/api/login').then((response) =>{
-      //         this.$store.commit('access_token', response.data.access_token);
-      //         console.log(this.$store.state.access_token);
-      //         this.isLoading = false;
-      //     }).catch((error) =>{
-      //         this.isLoading = false;
-      //         this.isLogin = true;
-      //         console.log(error)
-      //     })
+      this.isLoading = true; // this.$store.dispatch('retrieveToken',{
+      //     username: this.form.username,
+      //     password: this.form.password,
+      // }).then((response) =>{
+      //     this.$router.push({name:'home'});
+      //     this.isLoading = false;
+      // }).catch((error) =>{
+      //     console.log(error);
+      //     this.isLoading = false;
       // });
-    }
+
+      new Promise(function (result, reject) {
+        _this.form.post('/api/login').then(function (response) {
+          _this.$store.commit('token', response.data.access_token);
+
+          localStorage.setItem('access_token', response.data.access_token);
+
+          _this.$router.push({
+            name: 'home'
+          });
+
+          _this.isLoading = false;
+        })["catch"](function (error) {
+          _this.isLoading = false;
+          console.log(error);
+        });
+      });
+    } // retrieveToken(contex,credentials){
+    //     return new Promise((resolve, reject) => {
+    //         axios.post('/api/login',{
+    //             username: credentials.username,
+    //             password: credentials.password,
+    //         }).then((response) =>{
+    //             localStorage.setItem('access_token', response.data.access_token);
+    //             contex.commit('token', response.data.access_token);
+    //             resolve(response)
+    //         }).catch((error) => {
+    //             reject(error)
+    //         })
+    //     });
+    // },
+
   }
 });
 
@@ -45442,6 +45448,7 @@ var render = function() {
                       id: "email",
                       type: "email",
                       name: "email",
+                      placeholder: "Email Address",
                       autocomplete: "email",
                       autofocus: ""
                     },
@@ -45484,6 +45491,7 @@ var render = function() {
                       id: "password",
                       type: "password",
                       name: "password",
+                      placeholder: "Password",
                       autocomplete: "current-password"
                     },
                     domProps: { value: _vm.form.password },
@@ -45567,19 +45575,34 @@ var render = function() {
                   ])
                 ]),
                 _vm._v(" "),
-                _vm._m(3)
-              ]),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "row justify-content-center" },
-                [_vm.isLoading ? _c("spinner") : _vm._e()],
-                1
-              )
+                _c("div", { staticClass: "col-sm-4" }, [
+                  !_vm.isLoading
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary btn-block",
+                          attrs: { type: "submit" }
+                        },
+                        [_vm._v("Sign In")]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.isLoading
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary btn-block",
+                          attrs: { type: "button", disabled: "" }
+                        },
+                        [_vm._v("Sign In...")]
+                      )
+                    : _vm._e()
+                ])
+              ])
             ]
           ),
           _vm._v(" "),
-          _vm._m(4)
+          _vm._m(3)
         ])
       ])
     ])
@@ -45610,20 +45633,8 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "input-group-append" }, [
       _c("div", { staticClass: "input-group-text" }, [
-        _c("span", { staticClass: "fa fa-lock" })
+        _c("span", { staticClass: "fa fa-unlock-alt" })
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-sm-4" }, [
-      _c(
-        "button",
-        { staticClass: "btn btn-primary btn-block", attrs: { type: "submit" } },
-        [_vm._v("Sign In")]
-      )
     ])
   },
   function() {
@@ -45656,7 +45667,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div")
+  return _c("div", [_c("spinner")], 1)
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -62726,29 +62737,25 @@ Vue.use(vue_router__WEBPACK_IMPORTED_MODULE_3__["default"]);
 
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_3__["default"]({
   mode: 'history',
+  saveScrollPosition: true,
   routes: _routes__WEBPACK_IMPORTED_MODULE_4__["default"]
 });
 router.beforeEach(function (to, from, next) {
-  if (to.matched.some(function (record) {
+  var requiresAuth = to.matched.some(function (record) {
     return record.meta.requiresAuth;
-  })) {
-    if (!store.getters.loggedIn) {
-      next({
-        name: 'login'
-      });
-    } else {
-      next();
-    }
-  } else if (to.matched.some(function (record) {
-    return record.meta.requiresGuest;
-  })) {
-    if (store.getters.loggedIn) {
-      next({
-        name: 'home'
-      });
-    } else {
-      next();
-    }
+  });
+  var currentUser = store.getters.loggedIn;
+
+  if (requiresAuth && !currentUser) {
+    next({
+      name: 'login'
+    });
+  } else if (to.path == '/login' && currentUser) {
+    next({
+      name: 'home'
+    });
+  } else {
+    next();
   }
 }); //app layouts
 
@@ -62961,9 +62968,6 @@ __webpack_require__.r(__webpack_exports__);
     loggedIn: function loggedIn(state) {
       return state.token !== null;
     },
-    retrieveToken: function retrieveToken(state) {
-      return state.token;
-    },
     destroyToken: function destroyToken(state) {
       return state.token = null;
     },
@@ -62972,20 +62976,20 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   actions: {
-    retrieveToken: function retrieveToken(contex, credentials) {
-      return new Promise(function (resolve, reject) {
-        axios.post('/api/login', {
-          username: credentials.username,
-          password: credentials.password
-        }).then(function (response) {
-          localStorage.setItem('access_token', response.data.access_token);
-          contex.commit('token', response.data.access_token);
-          resolve(response);
-        })["catch"](function (error) {
-          reject(error);
-        });
-      });
-    },
+    // retrieveToken(contex,credentials){
+    // 	return new Promise((resolve, reject) => {
+    // 		axios.post('/api/login',{
+    // 			username: credentials.username,
+    // 			password: credentials.password,
+    // 		}).then((response) =>{
+    // 			localStorage.setItem('access_token', response.data.access_token);
+    // 			contex.commit('token', response.data.access_token);
+    // 			resolve(response)
+    // 		}).catch((error) => {
+    // 			reject(error)
+    // 		})
+    // 	});
+    // },
     destroyToken: function destroyToken(contex) {
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + contex.state.token;
 
@@ -63409,7 +63413,7 @@ var routes = [{
   name: 'login',
   component: _pages_Login__WEBPACK_IMPORTED_MODULE_2__["default"],
   meta: {
-    requiresGuest: true
+    requiresAuth: false
   }
 }, {
   path: '/logout',
@@ -63423,7 +63427,7 @@ var routes = [{
   name: 'register',
   component: _pages_Register__WEBPACK_IMPORTED_MODULE_4__["default"],
   meta: {
-    requiresGuest: true
+    requiresAuth: false
   }
 }];
 /* harmony default export */ __webpack_exports__["default"] = (routes);

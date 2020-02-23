@@ -28,7 +28,7 @@ const routes = [
         name: 'login',
         component: Login,
         meta:{
-            requiresGuest: true
+            requiresAuth: false
         }
     },
 
@@ -46,7 +46,7 @@ const routes = [
         name: 'register',
         component: Register,
         meta:{
-            requiresGuest: true
+            requiresAuth: false
         }
     }
 ];

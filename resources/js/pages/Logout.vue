@@ -1,6 +1,6 @@
 <template>
     <div>
-        
+        <spinner></spinner>
     </div>
 </template>
 

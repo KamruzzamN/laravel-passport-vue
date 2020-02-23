@@ -23,29 +23,21 @@ Vue.use(VueRouter);
 import routes from './routes';
 const router = new VueRouter({
     mode: 'history',
+    saveScrollPosition: true,
     routes,
 });
 
 router.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-        if (!store.getters.loggedIn) {
-            next({
-                name: 'login'
-            })
-        }
-        else {
-            next()
-        }
+    const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+    const currentUser = store.getters.loggedIn;
+    if(requiresAuth && !currentUser){
+        next({name:'login'});
     }
-    else if (to.matched.some(record => record.meta.requiresGuest)) {
-        if (store.getters.loggedIn) {
-            next({
-                name: 'home'
-            })
-        }
-        else {
-            next()
-        }
+    else if(to.path == '/login' && currentUser){
+        next({name:'home'});
+    }
+    else{
+        next();
     }
 })
 
