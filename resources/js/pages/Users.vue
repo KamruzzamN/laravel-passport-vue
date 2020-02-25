@@ -69,7 +69,43 @@
             }
         },
         methods:{
-
+            deleteUser(id){
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.value) {
+                        axios.get('/api/user/delete/'+id)
+                        .then((response) => {
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'User Successfully Deleted :)',
+                                icon: 'success'
+                            });
+                            this.$store.dispatch('loadUsers');
+                        })
+                        .catch((error) => {
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'User Deleted Fail:)',
+                                icon: 'error'
+                            })
+                        });
+                    }
+                    else{
+                        Swal.fire({
+                            title: 'Cancelled',
+                            text: 'Your imaginary file is safe :)',
+                            icon: 'info'
+                        })
+                    }
+                })
+            },
         }
     }
 </script>

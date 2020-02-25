@@ -16,10 +16,12 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('/users', function(){
-    return response()->json(['users' => App\User::all()],200);
-});
 
 Route::post('/login', 'AuthController@login');
 Route::post('/register', 'AuthController@register');
 Route::post('/logout', 'AuthController@logout');
+
+Route::get('/users', 'UserController@users');
+Route::get('/user/delete/{id}', 'UserController@deleteUser');
+
+
