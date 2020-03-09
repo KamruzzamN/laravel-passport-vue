@@ -32,6 +32,11 @@
                         <li class="nav-item" v-if="!loggedIn">
                             <router-link class="nav-link" :to="{name: 'register'}">Register</router-link>
                         </li>
+                        
+                        <li class="nav-item" v-if="loggedIn">
+                            <router-link class="nav-link" :to="{name: 'home'}">{{user.name}}</router-link>
+                        </li>
+
                         <li class="nav-item" v-if="loggedIn">
                             <router-link class="nav-link" :to="{name: 'logout'}">Logout</router-link>
                         </li>
@@ -44,9 +49,15 @@
 
 <script>
     export default {
+        mounted(){
+            this.$store.dispatch('user')
+        },
         computed:{
             loggedIn(){
                 return this.$store.getters.loggedIn
+            },
+            user(){
+                return this.$store.getters.user
             }
         }
         
