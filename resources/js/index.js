@@ -1,7 +1,8 @@
 export default {
 	state: {
 		token: localStorage.getItem('access_token') || null,
-		users: [],
+		user: localStorage.getItem('user') || null,
+		users: null,
 	},
 
 	getters: {
@@ -12,27 +13,30 @@ export default {
 		destroyToken(state){
 			return state.token = null
 		},
+		user(state){
+			return state.user
+		},
 		users(state){
 			return state.users
 		}
+
 	},
 
 	actions:{
 
-		// retrieveToken(contex,credentials){
-		// 	return new Promise((resolve, reject) => {
-		// 		axios.post('/api/login',{
-		// 			username: credentials.username,
-		// 			password: credentials.password,
-		// 		}).then((response) =>{
-		// 			localStorage.setItem('access_token', response.data.access_token);
-		// 			contex.commit('token', response.data.access_token);
-		// 			resolve(response)
-		// 		}).catch((error) => {
-		// 			reject(error)
-		// 		})
-		// 	});
-		// },
+		user(contex){
+			axios.defaults.headers.common['Authorization'] = 'Bearer '+contex.state.token;
+			if(contex.getters.loggedIn){
+				return new Promise((resolve, reject) => {
+					axios.get('/api/user').then((response) =>{
+						localStorage.setItem('user', response.data.user);
+						contex.commit('user', response.data.user);
+					}).catch((error) => {
+						console.log(error)
+					})
+				});
+			}
+		},
 
 		destroyToken(contex){
 			axios.defaults.headers.common['Authorization'] = 'Bearer '+contex.state.token;
@@ -41,11 +45,10 @@ export default {
 					axios.post('/api/logout').then((response) =>{
 						localStorage.removeItem('access_token');
 						contex.commit('destroyToken');
-						resolve(response)
 					}).catch((error) => {
 						localStorage.removeItem('access_token');
 						contex.commit('destroyToken');
-						reject(error)
+						console.log(error)
 					})
 				});
 			}
@@ -66,6 +69,10 @@ export default {
 		},
 		destroyToken(state, data){
 			return state.token = null
+		},
+
+		user(state, data){
+			return state.user = data
 		},
 		users(state, data){
 			return state.users = data
