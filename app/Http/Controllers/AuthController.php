@@ -13,7 +13,12 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        
+        //$this->middleware('auth:api')->except('login');
+    }
+
+    public function currentUser(Request $request){
+        $user = $request->user();
+        return response()->json(['user' => $user],200);
     }
     
     public function login(Request $request){
