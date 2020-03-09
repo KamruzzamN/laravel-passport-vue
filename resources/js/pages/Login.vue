@@ -98,7 +98,11 @@
                         this.isLoading = false;
                     }).catch((error) =>{
                         this.isLoading = false;
-                        console.log(error)
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Email or Password Not Match :)',
+                            icon: 'error'
+                        })
                     })
                 });
             },
