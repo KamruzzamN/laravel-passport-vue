@@ -58,11 +58,11 @@ class AuthController extends Controller
     		return response()->json(['error' => 'Invalid Login Credential'],401);
         }
         else{
-            $token = Auth::user()->createToken('authToken')->accessToken;
+            $token = Auth::user()->createToken('authToken');
             return response()->json([
                 "user_data" => Auth::user(),
                 "token_type" => "Bearer",
-                "access_token" => $token,
+                "access_token" => $token->accessToken,
             ],200);
         }
     }
