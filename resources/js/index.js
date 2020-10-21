@@ -29,8 +29,8 @@ export default {
 			if(contex.getters.loggedIn){
 				return new Promise((resolve, reject) => {
 					axios.get('/api/user').then((response) =>{
-						localStorage.setItem('user', response.data.user);
-						contex.commit('user', response.data.user);
+						localStorage.setItem('user', response.data.user_data);
+						contex.commit('user', response.data.user_data);
 					}).catch((error) => {
 						console.log(error)
 					})

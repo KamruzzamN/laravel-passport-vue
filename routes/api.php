@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -10,11 +11,15 @@
 |
 */
 
-Route::middleware('auth:api')->get('/user','AuthController@currentUser');
+Route::namespace('API')->group(function(){
+    //fetch request user
+    Route::get('/user','AuthController@user');
+    //login logout, register route
+    Route::post('/login', 'AuthController@login');
+    Route::post('/register', 'AuthController@register');
+    Route::post('/logout', 'AuthController@logout');
+});
 
-Route::post('/login', 'AuthController@login');
-Route::middleware('auth:api')->post('/register', 'AuthController@register');
-Route::middleware('auth:api')->post('/logout', 'AuthController@logout');
 
 Route::middleware('auth:api')->get('/users', 'UserController@users');
 Route::middleware('auth:api')->get('/user/delete/{id}', 'UserController@deleteUser');
