@@ -17,26 +17,31 @@ class AuthController extends Controller
     }
 
     public function user(Request $request){
-        $user = $request->user();
-        return response()->json(['user_data' => $user],200);
+        $user = Auth::user();
+        return response()->json(['user' => $user],200);
     }
-    
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
     public function login(Request $request){
         $this->validate($request,[
             'email' => 'required',
             'password' => 'required|min:4',
         ]);
 
-        if (!Auth::attempt($this->credentials($request))) {
-    		return response()->json(['error' => 'Invalid Login Credential'],401);
+        if (Auth::attempt($this->credentials($request))) {
+            $getToken = Auth::user()->createToken('authToken');
+            return response()->json([
+                "token_type" => "Bearer",
+                "expires_at" => Carbon::parse($getToken->token->expires_at)->toDateTimeString(),
+                "access_token" => $getToken->accessToken,
+            ],200);
         }
         else{
-            $token = Auth::user()->createToken('authToken');
-            return response()->json([
-                "user_data" => Auth::user(),
-                "token_type" => "Bearer",
-                "access_token" => $token->accessToken,
-            ],200);
+            return response()->json(['error' => 'Invalid Login Credential'],401);
         }
 
     }
@@ -47,23 +52,23 @@ class AuthController extends Controller
             'email' => ['required', 'string', 'unique:users'],
             'password' => ['required', 'string', 'min:4'],
         ]);
-        
+
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        if (!Auth::attempt($this->credentials($request))) {
-    		return response()->json(['error' => 'Invalid Login Credential'],401);
+        if (Auth::attempt($this->credentials($request))) {
+            $getToken = Auth::user()->createToken('authToken');
+            return response()->json([
+                "token_type" => "Bearer",
+                "expires_at" => Carbon::parse($getToken->token->expires_at)->toDateTimeString(),
+                "access_token" => $getToken->accessToken,
+            ],200);
         }
         else{
-            $token = Auth::user()->createToken('authToken');
-            return response()->json([
-                "user_data" => Auth::user(),
-                "token_type" => "Bearer",
-                "access_token" => $token->accessToken,
-            ],200);
+            return response()->json(['error' => 'Invalid Login Credential'],401);
         }
     }
 
@@ -74,7 +79,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->token()->revoke();
+        Auth::user()->token()->revoke();
         return response()->json(['message' =>'Logged out successfully'], 200);
     }
 
