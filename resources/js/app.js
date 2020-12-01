@@ -1,7 +1,7 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
-
+window.baseURL = document.head.querySelector('meta[name="base-url"]').content;
 //vuex
 import Vuex from 'vuex';
 Vue.use(Vuex);

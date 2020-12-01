@@ -28,7 +28,7 @@ export default {
 			axios.defaults.headers.common['Authorization'] = 'Bearer '+contex.state.token;
 			if(contex.getters.loggedIn){
 				return new Promise((resolve, reject) => {
-					axios.get('/api/user').then((response) =>{
+					axios.get(baseURL + '/api/user').then((response) =>{
 						localStorage.setItem('user', response.data.user);
 						contex.commit('user', response.data.user);
 					}).catch((error) => {
@@ -42,7 +42,7 @@ export default {
 			axios.defaults.headers.common['Authorization'] = 'Bearer '+contex.state.token;
 			if(contex.getters.loggedIn){
 				return new Promise((resolve, reject) => {
-					axios.post('/api/logout').then((response) =>{
+					axios.post(baseURL + '/api/logout').then((response) =>{
 						localStorage.removeItem('access_token');
 						contex.commit('destroyToken');
 					}).catch((error) => {
@@ -55,7 +55,7 @@ export default {
 		},
 
 		loadUsers(contex){
-			axios.get('/api/users').then((response) =>{
+			axios.get(baseURL + '/api/users').then((response) =>{
 				contex.commit('users', response.data.users)
 			}).catch((error) => {
 				console.log(error)

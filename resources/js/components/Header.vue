@@ -38,7 +38,7 @@
                         </li>
 
                         <li class="nav-item" v-if="loggedIn">
-                            <router-link class="nav-link" :to="{name: 'logout'}">Logout</router-link>
+                            <a href="#" class="nav-link" @click="logout">Logout</a>
                         </li>
                     </ul>
                 </div>
@@ -58,6 +58,12 @@
             },
             user(){
                 return this.$store.getters.user
+            }
+        },
+        methods:{
+            logout(){
+                this.$store.dispatch('destroyToken')
+                this.$router.push('/login');
             }
         }
         

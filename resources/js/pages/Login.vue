@@ -79,7 +79,7 @@
             login(){
                 this.isLoading = true;
                 new Promise((result, reject) => {
-                    this.form.post('/api/login').then((response) =>{
+                    this.form.post(baseURL + '/api/login').then((response) =>{
                         this.$store.commit('token', response.data.access_token);
                         localStorage.setItem('access_token', response.data.access_token);
                         this.$router.push({name:'home'});
